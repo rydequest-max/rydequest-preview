@@ -515,6 +515,7 @@ function show(key,href){
  surface.querySelectorAll('form').forEach(form=>form.noValidate=true);
  const path=page.dataset.url;
  surface.querySelectorAll('#main-navigation a').forEach(a=>{if(a.getAttribute('href')===path)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+ surface.querySelectorAll('a[href^="/"]').forEach(a=>a.setAttribute('href','#'+a.getAttribute('href')));
  let theme='light';try{theme=localStorage.getItem('rydequest-theme')||'light';}catch(_){}
  setTheme(theme);
  if(current==='apply'){
@@ -548,7 +549,7 @@ function navigate(href,push=true){
 surface.addEventListener('click',e=>{
  const menu=e.target.closest('.menu-toggle');if(menu){const nav=surface.querySelector('#main-navigation');const open=menu.getAttribute('aria-expanded')!=='true';nav.classList.toggle('is-open',open);menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'Close −':'Menu +';return;}
  const theme=e.target.closest('.theme-toggle');if(theme){const next=surface.querySelector('.public-site').dataset.theme==='dark'?'light':'dark';setTheme(next);try{localStorage.setItem('rydequest-theme',next);}catch(_){}return;}
- const a=e.target.closest('a');if(a){e.preventDefault();let href=a.getAttribute('href')||'';
+ const a=e.target.closest('a');if(a){if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();let href=a.getAttribute('href')||'';
   if(current==='jobs'&&href.includes('/apply/')){const title=a.closest('.job')?.querySelector('h2')?.textContent||'';href+='?role='+encodeURIComponent(title);}
   navigate(href);
  }
